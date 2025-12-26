@@ -8,6 +8,7 @@ interface DomainsDashboardProps {
   onDomainClick: (domain: DomainData) => void;
   onProfileClick: () => void;
   onMapClick: () => void;
+  onAddDomainClick: () => void;
 }
 
 export function DomainsDashboard({
@@ -16,6 +17,7 @@ export function DomainsDashboard({
   onDomainClick,
   onProfileClick,
   onMapClick,
+  onAddDomainClick,
 }: DomainsDashboardProps) {
   return (
     <div className="min-h-screen bg-gray-50 pb-8 max-w-md mx-auto">
@@ -47,7 +49,10 @@ export function DomainsDashboard({
       <div className="px-6 pt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg">My Domains</h2>
-          <button className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors">
+          <button
+            onClick={onAddDomainClick}
+            className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors"
+          >
             <Plus className="w-5 h-5" />
             <span className="text-sm">Add Domain</span>
           </button>

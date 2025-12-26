@@ -5,6 +5,7 @@ import { DomainsDashboard } from './components/DomainsDashboard';
 import { DomainProfile } from './components/DomainProfile';
 import { QRShareScreen } from './components/QRShareScreen';
 import { EventsMap } from './components/EventsMap';
+import { AddDomainScreen } from './components/AddDomainScreen';
 import type { GameEvent } from './components/EventsMap';
 import type { DomainData } from './types/domain';
 
@@ -14,7 +15,8 @@ type Screen =
   | 'dashboard'
   | 'domainProfile'
   | 'qrShare'
-  | 'events';
+  | 'events'
+  | 'addDomain';
 
 // Mock data
 const mockDomains: DomainData[] = [
@@ -125,6 +127,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
   const [displayName, setDisplayName] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<DomainData | null>(null);
+  const [domains, setDomains] = useState<DomainData[]>(mockDomains);
 
   const handleGetStarted = () => {
     setCurrentScreen('onboarding');
@@ -149,6 +152,15 @@ export default function App() {
     setSelectedDomain(null);
   };
 
+  const handleAddDomainClick = () => {
+    setCurrentScreen('addDomain');
+  };
+
+  const handleAddDomain = (domain: DomainData) => {
+    setDomains([...domains, domain]);
+    setCurrentScreen('dashboard');
+  };
+
   return (
     <div className="h-screen overflow-auto bg-white">
       {currentScreen === 'welcome' && (
@@ -165,10 +177,11 @@ export default function App() {
       {currentScreen === 'dashboard' && (
         <DomainsDashboard
           displayName={displayName}
-          domains={mockDomains}
+          domains={domains}
           onDomainClick={handleDomainClick}
           onProfileClick={() => {}}
           onMapClick={() => setCurrentScreen('events')}
+          onAddDomainClick={handleAddDomainClick}
         />
       )}
 
@@ -191,6 +204,13 @@ export default function App() {
       {currentScreen === 'events' && (
         <EventsMap
           events={mockEvents}
+          onBack={handleBackToDashboard}
+        />
+      )}
+
+      {currentScreen === 'addDomain' && (
+        <AddDomainScreen
+          onComplete={handleAddDomain}
           onBack={handleBackToDashboard}
         />
       )}
