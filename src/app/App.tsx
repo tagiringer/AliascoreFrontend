@@ -29,6 +29,7 @@ const mockDomains: DomainData[] = [
     gamesPlayed: 1247,
     rankTier: 'Expert',
     bgGradient: 'bg-gradient-to-br from-amber-500 to-orange-600',
+    externalLink: 'https://ratings.uschess.org/player/15014995',
   },
   {
     id: '2',

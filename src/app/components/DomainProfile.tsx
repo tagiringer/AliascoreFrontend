@@ -1,5 +1,6 @@
-import { ArrowLeft, Share2, Trophy, Medal, Star } from 'lucide-react';
+import { ArrowLeft, Share2, Trophy } from 'lucide-react';
 import { DomainData } from './DomainCard';
+import { ProfileStatsCard } from './ProfileStatsCard';
 
 interface DomainProfileProps {
   domain: DomainData;
@@ -36,53 +37,14 @@ export function DomainProfile({ domain, onBack, onShare }: DomainProfileProps) {
 
       {/* Profile Card */}
       <div className="px-6 -mt-24">
-        <div className="bg-white rounded-3xl shadow-xl p-6">
-          {/* Username */}
-          <div className="text-center mb-6">
-            <p className="text-gray-600 text-sm mb-1">Platform Username</p>
-            <p className="text-xl">@{domain.username}</p>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-purple-50 rounded-2xl p-4 text-center">
-              <div className="flex justify-center mb-2">
-                <Trophy className="w-6 h-6 text-purple-600" />
-              </div>
-              <p className="text-2xl mb-1">{domain.currentRating || '—'}</p>
-              <p className="text-sm text-gray-600">Current Rating</p>
-            </div>
-
-            <div className="bg-blue-50 rounded-2xl p-4 text-center">
-              <div className="flex justify-center mb-2">
-                <Star className="w-6 h-6 text-blue-600" />
-              </div>
-              <p className="text-2xl mb-1">{domain.peakRating || '—'}</p>
-              <p className="text-sm text-gray-600">Peak Rating</p>
-            </div>
-
-            <div className="bg-green-50 rounded-2xl p-4 text-center">
-              <div className="flex justify-center mb-2">
-                <Medal className="w-6 h-6 text-green-600" />
-              </div>
-              <p className="text-2xl mb-1">{domain.gamesPlayed}</p>
-              <p className="text-sm text-gray-600">Games Played</p>
-            </div>
-
-            <div className="bg-orange-50 rounded-2xl p-4 text-center">
-              <div className="flex justify-center mb-2">
-                <Trophy className="w-6 h-6 text-orange-600" />
-              </div>
-              <p className="text-2xl mb-1">{domain.rankTier || 'N/A'}</p>
-              <p className="text-sm text-gray-600">Rank Tier</p>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-2xl font-semibold hover:opacity-90 transition-opacity">
-            View Full Statistics
-          </button>
-        </div>
+        <ProfileStatsCard
+          username={domain.username}
+          currentRating={domain.currentRating}
+          peakRating={domain.peakRating}
+          gamesPlayed={domain.gamesPlayed}
+          rankTier={domain.rankTier}
+          platformDetailLink={domain.externalLink}
+        />
 
         {/* Recent Achievements */}
         <div className="mt-6 bg-white rounded-3xl shadow-sm p-6">

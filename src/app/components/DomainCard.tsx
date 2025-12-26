@@ -11,6 +11,7 @@ export interface DomainData {
   gamesPlayed: number;
   rankTier?: string;
   bgGradient: string;
+  externalLink?: string;
 }
 
 interface DomainCardProps {
