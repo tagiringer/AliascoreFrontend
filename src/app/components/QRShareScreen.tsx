@@ -1,6 +1,6 @@
 import { ArrowLeft, Download, Share2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import { DomainData } from './DomainCard';
+import type { DomainData } from '../types/domain';
 
 interface QRShareScreenProps {
   domain: DomainData;
@@ -37,7 +37,7 @@ export function QRShareScreen({ domain, displayName, onBack }: QRShareScreenProp
               <div className="text-3xl">{domain.icon}</div>
               <div>
                 <p className="font-semibold">{domain.name}</p>
-                <p className="text-sm text-white/80">@{domain.username}</p>
+                <p className="text-sm text-white/80">{domain.profiles.length} platform{domain.profiles.length !== 1 ? 's' : ''}</p>
               </div>
             </div>
             <div className="bg-white p-4 rounded-xl flex items-center justify-center">

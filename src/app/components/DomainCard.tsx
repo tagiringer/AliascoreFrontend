@@ -1,18 +1,5 @@
 import { ChevronRight } from 'lucide-react';
-
-export interface DomainData {
-  id: string;
-  name: string;
-  icon: string;
-  platform: string;
-  username: string;
-  peakRating?: number;
-  currentRating?: number;
-  gamesPlayed: number;
-  rankTier?: string;
-  bgGradient: string;
-  externalLink?: string;
-}
+import type { DomainData } from '../types/domain';
 
 interface DomainCardProps {
   domain: DomainData;
@@ -20,6 +7,12 @@ interface DomainCardProps {
 }
 
 export function DomainCard({ domain, onClick }: DomainCardProps) {
+  const totalGames = domain.profiles.reduce((sum, profile) => sum + profile.gamesPlayed, 0);
+  const highestRating = domain.profiles.reduce((max, profile) => {
+    const rating = profile.currentRating || profile.peakRating || 0;
+    return rating > max ? rating : max;
+  }, 0);
+
   return (
     <button
       onClick={onClick}
@@ -31,28 +24,41 @@ export function DomainCard({ domain, onClick }: DomainCardProps) {
             <div className="text-4xl">{domain.icon}</div>
             <div>
               <h3 className="font-semibold">{domain.name}</h3>
-              <p className="text-sm text-white/80">{domain.platform}</p>
+              <p className="text-sm text-white/80">{domain.profiles.length} platform{domain.profiles.length !== 1 ? 's' : ''}</p>
             </div>
           </div>
           <ChevronRight className="w-5 h-5 text-white/80 group-hover:translate-x-1 transition-transform" />
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold">
-              {domain.currentRating || '—'}
-            </span>
-            {domain.rankTier && (
-              <span className="text-sm bg-white/20 px-2 py-0.5 rounded-full">
-                {domain.rankTier}
-              </span>
-            )}
-          </div>
-          <div className="flex gap-4 text-sm text-white/80">
-            <span>@{domain.username}</span>
-            <span>•</span>
-            <span>{domain.gamesPlayed} games</span>
-          </div>
+        {/* Platform Mini Cards */}
+        <div className="space-y-2 mb-3">
+          {domain.profiles.map((profile) => (
+            <div key={profile.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{profile.platformName}</p>
+                  <p className="text-xs text-white/70">@{profile.username}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-bold">{profile.currentRating || profile.peakRating || '—'}</p>
+                  {profile.rankTier && (
+                    <p className="text-xs text-white/70">{profile.rankTier}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Aggregated Stats */}
+        <div className="flex gap-4 text-sm text-white/80 pt-2 border-t border-white/20">
+          <span>Total: {totalGames} games</span>
+          {highestRating > 0 && (
+            <>
+              <span>•</span>
+              <span>Peak: {highestRating}</span>
+            </>
+          )}
         </div>
       </div>
 

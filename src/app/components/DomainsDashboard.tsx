@@ -1,5 +1,6 @@
 import { Plus, User, MapPin } from 'lucide-react';
-import { DomainCard, DomainData } from './DomainCard';
+import { DomainCard } from './DomainCard';
+import type { DomainData } from '../types/domain';
 
 interface DomainsDashboardProps {
   displayName: string;

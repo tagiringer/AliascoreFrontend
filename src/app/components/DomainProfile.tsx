@@ -1,5 +1,5 @@
 import { ArrowLeft, Share2, Trophy } from 'lucide-react';
-import { DomainData } from './DomainCard';
+import type { DomainData } from '../types/domain';
 import { ProfileStatsCard } from './ProfileStatsCard';
 
 interface DomainProfileProps {
@@ -31,20 +31,24 @@ export function DomainProfile({ domain, onBack, onShare }: DomainProfileProps) {
         <div className="text-center">
           <div className="text-6xl mb-4">{domain.icon}</div>
           <h1 className="text-2xl mb-1">{domain.name}</h1>
-          <p className="text-white/80">{domain.platform}</p>
+          <p className="text-white/80">{domain.profiles.length} platform{domain.profiles.length !== 1 ? 's' : ''}</p>
         </div>
       </div>
 
-      {/* Profile Card */}
-      <div className="px-6 -mt-24">
-        <ProfileStatsCard
-          username={domain.username}
-          currentRating={domain.currentRating}
-          peakRating={domain.peakRating}
-          gamesPlayed={domain.gamesPlayed}
-          rankTier={domain.rankTier}
-          platformDetailLink={domain.externalLink}
-        />
+      {/* Platform Cards */}
+      <div className="px-6 -mt-24 space-y-4">
+        {domain.profiles.map((profile) => (
+          <ProfileStatsCard
+            key={profile.id}
+            platformName={profile.platformName}
+            username={profile.username}
+            currentRating={profile.currentRating}
+            peakRating={profile.peakRating}
+            gamesPlayed={profile.gamesPlayed}
+            rankTier={profile.rankTier}
+            platformDetailLink={profile.externalLink}
+          />
+        ))}
 
         {/* Recent Achievements */}
         <div className="mt-6 bg-white rounded-3xl shadow-sm p-6">

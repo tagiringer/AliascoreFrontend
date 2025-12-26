@@ -6,7 +6,7 @@ import { DomainProfile } from './components/DomainProfile';
 import { QRShareScreen } from './components/QRShareScreen';
 import { EventsMap } from './components/EventsMap';
 import type { GameEvent } from './components/EventsMap';
-import type { DomainData } from './components/DomainCard';
+import type { DomainData } from './types/domain';
 
 type Screen =
   | 'welcome'
@@ -19,41 +19,72 @@ type Screen =
 // Mock data
 const mockDomains: DomainData[] = [
   {
-    id: '1',
-    name: 'Chess.com',
+    id: 'chess',
+    name: 'Chess',
     icon: '♟️',
-    platform: 'Chess.com',
-    username: 'tactical_genius',
-    peakRating: 2156,
-    currentRating: 2089,
-    gamesPlayed: 1247,
-    rankTier: 'Expert',
     bgGradient: 'bg-gradient-to-br from-amber-500 to-orange-600',
-    externalLink: 'https://ratings.uschess.org/player/15014995',
+    profiles: [
+      {
+        id: 'chess-com',
+        platformName: 'Chess.com',
+        username: 'tactical_genius',
+        peakRating: 2156,
+        currentRating: 2089,
+        gamesPlayed: 1247,
+        rankTier: 'Expert',
+        externalLink: 'https://www.chess.com/member/tactical_genius',
+      },
+      {
+        id: 'lichess',
+        platformName: 'Lichess',
+        username: 'tactical_genius',
+        peakRating: 2234,
+        currentRating: 2180,
+        gamesPlayed: 892,
+        rankTier: '2200+',
+        externalLink: 'https://lichess.org/@/tactical_genius',
+      },
+      {
+        id: 'uscf',
+        platformName: 'USCF',
+        username: 'tactical_genius',
+        currentRating: 2050,
+        gamesPlayed: 156,
+        externalLink: 'https://ratings.uschess.org/player/15014995',
+      },
+    ],
   },
   {
-    id: '2',
+    id: 'valorant',
     name: 'Valorant',
     icon: '🎯',
-    platform: 'Riot Games',
-    username: 'SpikeMaster',
-    peakRating: 2834,
-    currentRating: 2650,
-    gamesPlayed: 892,
-    rankTier: 'Immortal 2',
     bgGradient: 'bg-gradient-to-br from-red-500 to-pink-600',
+    profiles: [
+      {
+        id: 'valorant-riot',
+        platformName: 'Riot Games',
+        username: 'SpikeMaster',
+        peakRating: 2834,
+        currentRating: 2650,
+        gamesPlayed: 892,
+        rankTier: 'Immortal 2',
+      },
+    ],
   },
   {
-    id: '3',
-    name: 'Speedrun.com',
+    id: 'speedrunning',
+    name: 'Speedrunning',
     icon: '⚡',
-    platform: 'Speedrun.com',
-    username: 'FastRunner99',
-    peakRating: undefined,
-    currentRating: undefined,
-    gamesPlayed: 156,
-    rankTier: '3rd Global',
     bgGradient: 'bg-gradient-to-br from-blue-500 to-cyan-600',
+    profiles: [
+      {
+        id: 'speedrun-com',
+        platformName: 'Speedrun.com',
+        username: 'FastRunner99',
+        gamesPlayed: 156,
+        rankTier: '3rd Global',
+      },
+    ],
   },
 ];
 
