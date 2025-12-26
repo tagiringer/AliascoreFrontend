@@ -161,6 +161,12 @@ export default function App() {
     setCurrentScreen('dashboard');
   };
 
+  const handleUntrackDomain = (domainId: string) => {
+    setDomains(domains.filter((d) => d.id !== domainId));
+    setCurrentScreen('dashboard');
+    setSelectedDomain(null);
+  };
+
   return (
     <div className="h-screen overflow-auto bg-white">
       {currentScreen === 'welcome' && (
@@ -190,6 +196,7 @@ export default function App() {
           domain={selectedDomain}
           onBack={handleBackToDashboard}
           onShare={handleShareClick}
+          onUntrack={() => handleUntrackDomain(selectedDomain.id)}
         />
       )}
 
