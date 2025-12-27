@@ -1,5 +1,6 @@
 import { Plus, User, MapPin } from 'lucide-react';
 import { DomainCard } from './DomainCard';
+import { Avatar3D } from './Avatar3D';
 import type { DomainData } from '../types/domain';
 
 interface DomainsDashboardProps {
@@ -24,10 +25,20 @@ export function DomainsDashboard({
       {/* Header */}
       <div className="bg-white px-6 py-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl">Hey, {displayName} 👋</h1>
-            <p className="text-gray-600 text-sm mt-1">Your Gaming Identity</p>
+          <div className="flex items-center gap-3">
+            {/* 3D Avatar */}
+            <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+              <Avatar3D width={80} height={80} />
+            </div>
+
+            {/* Greeting */}
+            <div>
+              <h1 className="text-2xl">Hey, {displayName} 👋</h1>
+              <p className="text-gray-600 text-sm mt-1">Your Gaming Identity</p>
+            </div>
           </div>
+
+          {/* Action Buttons */}
           <div className="flex gap-2">
             <button
               onClick={onMapClick}
