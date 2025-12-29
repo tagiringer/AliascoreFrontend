@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client/react';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { OnboardingScreen } from './components/OnboardingScreen';
 import { DomainsDashboard } from './components/DomainsDashboard';
@@ -8,6 +9,8 @@ import { EventsMap } from './components/EventsMap';
 import { AddDomainScreen } from './components/AddDomainScreen';
 import type { GameEvent } from './components/EventsMap';
 import type { DomainData } from './types/domain';
+import { GET_USER_DOMAINS, GET_USER_PLATFORMS } from '../graphql/queries';
+import { transformUserDataToDomainDataArray } from '../graphql/transformers';
 
 type Screen =
   | 'welcome'
@@ -18,77 +21,8 @@ type Screen =
   | 'events'
   | 'addDomain';
 
-// Mock data
-const mockDomains: DomainData[] = [
-  {
-    id: 'chess',
-    name: 'Chess',
-    icon: '♟️',
-    bgGradient: 'bg-gradient-to-br from-amber-500 to-orange-600',
-    profiles: [
-      {
-        id: 'chess-com',
-        platformName: 'Chess.com',
-        username: 'tactical_genius',
-        peakRating: 2156,
-        currentRating: 2089,
-        gamesPlayed: 1247,
-        rankTier: 'Expert',
-        externalLink: 'https://www.chess.com/member/tactical_genius',
-      },
-      {
-        id: 'lichess',
-        platformName: 'Lichess',
-        username: 'tactical_genius',
-        peakRating: 2234,
-        currentRating: 2180,
-        gamesPlayed: 892,
-        rankTier: '2200+',
-        externalLink: 'https://lichess.org/@/tactical_genius',
-      },
-      {
-        id: 'uscf',
-        platformName: 'USCF',
-        username: 'tactical_genius',
-        currentRating: 2050,
-        gamesPlayed: 156,
-        externalLink: 'https://ratings.uschess.org/player/15014995',
-      },
-    ],
-  },
-  {
-    id: 'valorant',
-    name: 'Valorant',
-    icon: '🎯',
-    bgGradient: 'bg-gradient-to-br from-red-500 to-pink-600',
-    profiles: [
-      {
-        id: 'valorant-riot',
-        platformName: 'Riot Games',
-        username: 'SpikeMaster',
-        peakRating: 2834,
-        currentRating: 2650,
-        gamesPlayed: 892,
-        rankTier: 'Immortal 2',
-      },
-    ],
-  },
-  {
-    id: 'speedrunning',
-    name: 'Speedrunning',
-    icon: '⚡',
-    bgGradient: 'bg-gradient-to-br from-blue-500 to-cyan-600',
-    profiles: [
-      {
-        id: 'speedrun-com',
-        platformName: 'Speedrun.com',
-        username: 'FastRunner99',
-        gamesPlayed: 156,
-        rankTier: '3rd Global',
-      },
-    ],
-  },
-];
+// Hardcoded user ID from seed data (for now, just one user)
+const TEST_USER_ID = 'cltest001user0000000000000';
 
 const mockEvents: GameEvent[] = [
   {
@@ -127,7 +61,30 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
   const [displayName, setDisplayName] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<DomainData | null>(null);
-  const [domains, setDomains] = useState<DomainData[]>(mockDomains);
+  const [domains, setDomains] = useState<DomainData[]>([]);
+
+  // Fetch user domains from backend
+  const { data: domainsData, loading: domainsLoading } = useQuery(GET_USER_DOMAINS, {
+    variables: { userId: TEST_USER_ID },
+    skip: currentScreen === 'welcome' || currentScreen === 'onboarding',
+  });
+
+  // Fetch user platforms from backend
+  const { data: platformsData, loading: platformsLoading } = useQuery(GET_USER_PLATFORMS, {
+    variables: { userId: TEST_USER_ID },
+    skip: currentScreen === 'welcome' || currentScreen === 'onboarding',
+  });
+
+  // Transform and update domains when data is loaded
+  useEffect(() => {
+    if (domainsData?.userDomains && platformsData?.userPlatforms) {
+      const transformedDomains = transformUserDataToDomainDataArray(
+        domainsData.userDomains,
+        platformsData.userPlatforms
+      );
+      setDomains(transformedDomains);
+    }
+  }, [domainsData, platformsData]);
 
   const handleGetStarted = () => {
     setCurrentScreen('onboarding');
@@ -181,14 +138,25 @@ export default function App() {
       )}
 
       {currentScreen === 'dashboard' && (
-        <DomainsDashboard
-          displayName={displayName}
-          domains={domains}
-          onDomainClick={handleDomainClick}
-          onProfileClick={() => {}}
-          onMapClick={() => setCurrentScreen('events')}
-          onAddDomainClick={handleAddDomainClick}
-        />
+        <>
+          {(domainsLoading || platformsLoading) ? (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading your domains...</p>
+              </div>
+            </div>
+          ) : (
+            <DomainsDashboard
+              displayName={displayName}
+              domains={domains}
+              onDomainClick={handleDomainClick}
+              onProfileClick={() => {}}
+              onMapClick={() => setCurrentScreen('events')}
+              onAddDomainClick={handleAddDomainClick}
+            />
+          )}
+        </>
       )}
 
       {currentScreen === 'domainProfile' && selectedDomain && (
